@@ -1,5 +1,6 @@
 import Ship from "./ship.js";
-describe('Ship', () => {
+describe('Ship', () => { 
+// 'describe' groups related tests into a test suite
     let myShip;
 
     beforeEach(() => { myShip = new Ship(5)});

@@ -1,14 +1,21 @@
-export default class Ship{
+export class Ship{
     constructor(length){
         this.length = length;
         this.hits = 0;
         this.sunk= false;
+        this.position = [];
     }
 
     getLength(){
         return this.length;
     }
-
+    getPosition(){
+        return this.position;
+    }
+    // this should only be called once, when the ship is initially placed.
+    setPosition([x,y]){
+        return this.position = [x,y];
+    }
     timesHit(){
         this.hits += 1;
     }
