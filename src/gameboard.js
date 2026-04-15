@@ -1,3 +1,4 @@
+import {Ship} from "./ship.js";
 export class Cell{
     constructor(){
         //this.validStates = ["empty", "ship", "miss", "hit"]
@@ -12,13 +13,16 @@ export class Cell{
             this.state = "hit";
             return true;
         }else if(this.state === "empty"){
-            this.state === "miss"
+            this.state = "miss"
             return false;
         }
         return null;
     }
     addShip(){
-        if(this.state === "empty") this.state === "ship";
+        if(this.state === "empty") this.state = "ship";
+    }
+    toString(){
+        return "Cell: state = " + this.state;
     }
 };
 
@@ -28,23 +32,18 @@ export class Gameboard{
         this.missedHits = Array.from({length: 10}, () => Array(10).fill(false));;
     }
     createGameboard(){
-        // const yLabels = "ABCDEFGHIJ".split("");
-        // const board = yLabels.map(x => Array.from({length:10},(_,y) => ({x, y: y+1}))
-        // );
         // create a new cell for each slot, so each is unique.
         const board = Array.from({length: 10}, () => 
             Array.from({length: 10}, () => new Cell())
         );
         return board;
     }
-    getGameboard(){
-        return this.board;
-    }
+    getGameboard(){ return this.board; }
 
     placeShip(ship, startCoords, isHorizontal){
         // place given ship class at given coordinates. 
         let horizontal = false;
-        if(isHorizontal == "horizontal"){
+        if(isHorizontal == "horizontal" || isHorizontal == "Horizontal"){
             horizontal = true;
         }
         const cellsToOccupy = [];
@@ -59,7 +58,7 @@ export class Gameboard{
             if(r < 0 || r >= 10 || c < 0 || c >= 10){
                 throw RangeError("Out of Gameboard area!");
             }
-            if(board[r][c].state !== "empty"){
+            if(this.board[r][c].state !== "empty"){
                 return "Space already occupied!";
             }
             // push path-in-progress to cellsToOccupy. 
@@ -70,24 +69,27 @@ export class Gameboard{
         return true;
     }
 
-    receiveAttack([x,y]){
+    receiveAttack([r, c]){
         // takes given coords, determines if attack hit ship or not
         // 'x' indice is the ROW and 'y' is the COLUMN.
         // ex: given [0,5] - target cell is @ row 0 column 5.
-        const target = this.board[x][y];
-        target.receiveHit();
-
+        const target = this.board[r][c];
+        return target.receiveHit();
     }
 
     allShipSunk(){
-        // iterate through gameBoard and scan if unsunk ships.
         // if all ships are sunk return true, else false.
-
-
-        return false;
+        //.flat() makes board list of 100 cells and prevents us from iterating w/ nested for loops
+        return this.board.flat().every(cell => cell.state !== "ship"); // will return T/F 
     }
 }
 
-let game = new Gameboard();
-let board = game.getGameboard();
-console.table(board.map(row => row.map(cell => cell.state))); // visualize the gameboard
+// let game = new Gameboard();
+// let board = game.getGameboard();
+// console.table(board.map(row => row.map(cell => cell.state))); // visualize the gameboard
+// let myShip = new Ship(3);
+// game.placeShip(myShip, [0,0], "horizontal");
+//     console.table(board.map(row => row.map(cell => cell.state)));
+
+// game.placeShip(myShip, [0,0], "vert");
+//     console.table(board.map(row => row.map(cell => cell.state)));
