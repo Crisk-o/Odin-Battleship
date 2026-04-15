@@ -29,7 +29,7 @@ export class Cell{
 export class Gameboard{
     constructor(){
         this.board = this.createGameboard();
-        this.missedHits = Array.from({length: 10}, () => Array(10).fill(false));;
+        this.missedHits = [];
     }
     createGameboard(){
         // create a new cell for each slot, so each is unique.
@@ -74,7 +74,15 @@ export class Gameboard{
         // 'x' indice is the ROW and 'y' is the COLUMN.
         // ex: given [0,5] - target cell is @ row 0 column 5.
         const target = this.board[r][c];
-        return target.receiveHit();
+        if(target.receiveHit() === false){ // missed hit, add to array.
+            this.missedHits.push(this.board[r][c]);
+            return false;
+        }
+        if(target.receiveHit() === true){
+            console.log("aaaaaaaaaaaa");
+        }
+        return true;
+        // return target.receiveHit();
     }
 
     allShipSunk(){
