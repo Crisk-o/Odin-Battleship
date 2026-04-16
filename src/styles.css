@@ -1,0 +1,63 @@
+    body{
+        background-color: peachpuff;
+        width: 100vw;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+    #titleDiv{
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        color: darkgoldenrod;
+        height: 100px;
+        width: 100vw;
+        background-color: black;
+        border: 1px solid darkgoldenrod;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 36px; 
+        letter-spacing: 15px;
+
+    }
+    #content{
+        display: block;
+        height: 100%;
+        width: 100%;
+    }
+    #gameInfo {
+        background-color: blueviolet;
+        display: flex;
+        width: 100vw;
+    }
+
+    #gameInfo > div {
+        background-color: blueviolet;
+        display: flex;
+        width: 100vw;
+    }
+    #player1Board{
+        display: flex;
+        border: 1px solid blue;
+        height: fit-content;
+        width: fit-content;
+
+    }
+    .cellDiv{
+        background-color: aqua;
+        width: 50px;
+        height: 50px;
+        border: 1px solid black;
+    }
+    .cellDiv.hit{
+        background-color: red;
+        border-color: darkred;
+    }
+    .cellDiv.miss{
+        background-color: antiquewhite;
+        border-color: mintcream;
+    }
+    .cellDiv.empty{
+        background-color: lightslategray;
+        border-color: darkgrey
+    }
+
