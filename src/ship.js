@@ -1,9 +1,10 @@
 export class Ship{
-    constructor(length){
+    constructor(length, name){
         this.length = length;
         this.hits = 0;
         this.sunk= false;
         this.position = [];
+        this.name = name;
     }
 
     getLength(){
@@ -26,3 +27,4 @@ export class Ship{
         return this.sunk = false;
     }
 }
+

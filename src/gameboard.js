@@ -1,12 +1,13 @@
-import {Ship} from "./ship.js";
 export class Cell{
     constructor(){
         //this.validStates = ["empty", "ship", "miss", "hit"]
         this.state = "empty";
+        this.ship = null;
     }
     getState(){
         return this.state;
     }
+  
     //change state on hit, ship placement,
     receiveHit(){
         if(this.state === "ship"){
@@ -18,9 +19,12 @@ export class Cell{
         }
         return null;
     }
-    addShip(){
+
+    addShip(shipInst){
         if(this.state === "empty") this.state = "ship";
+        this.ship = shipInst;
     }
+    
     toString(){
         return "Cell: state = " + this.state;
     }
@@ -39,7 +43,7 @@ export class Gameboard{
         return board;
     }
     getGameboard(){ return this.board; }
-
+    
     placeShip(ship, startCoords, isHorizontal){
         // place given ship class at given coordinates. 
         let horizontal = false;
@@ -65,7 +69,7 @@ export class Gameboard{
             cellsToOccupy.push(this.board[r][c]);
         }
         // path is eligible, so push it to the gameboard
-        cellsToOccupy.forEach(cell => cell.addShip());
+        cellsToOccupy.forEach(cell => cell.addShip(ship));
         return true;
     }
 
@@ -82,7 +86,6 @@ export class Gameboard{
             console.log("aaaaaaaaaaaa");
         }
         return true;
-        // return target.receiveHit();
     }
 
     allShipSunk(){
@@ -91,13 +94,6 @@ export class Gameboard{
         return this.board.flat().every(cell => cell.state !== "ship"); // will return T/F 
     }
 }
-
-// let game = new Gameboard();
-// let board = game.getGameboard();
-// console.table(board.map(row => row.map(cell => cell.state))); // visualize the gameboard
-// let myShip = new Ship(3);
-// game.placeShip(myShip, [0,0], "horizontal");
-//     console.table(board.map(row => row.map(cell => cell.state)));
 
 // game.placeShip(myShip, [0,0], "vert");
 //     console.table(board.map(row => row.map(cell => cell.state)));
