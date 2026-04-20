@@ -7,17 +7,50 @@
 </head>
 <body>
     <div id="titleDiv"><p id="titleDiv">Battleship</p></div>
-    <div id="content">            
-        <div id="gameInfo"> <!-- this will contain player names and display who's turn it currently is.-->
-            <div id="player1Name"></div>
-            <div id="player2Name"></div>
+    <div id="buttons" >
+        <button id="startGameBtn">Start Game</button>
+        <button id="createPlayerBtn" class="hidden">Create Player</button>
+        <dialog id="formDialog">
+            <div id="formContainer">
+                <form id="createPlayerForm" method="dialog">
+                    <label for="nameInput">Player Name: </label>
+                    <input id="nameInput" name="nameInput" type="text" min="1" max="15" placeholder="player 1..." required><br>
+                    <label for="isCompInput">Make Computer Play</label>
+                    <input name="isCompInput" id="isCompInput" type="checkbox"><br>
+                    <button name="submit" type="submit">Submit</button>
+                </form>
+            </div>
+        </dialog>
+    </div>  
+    <dialog id="changeNameDialog">
+        <div>
+            <form id="changeNameForm" method="dialog">
+                <label for="newNameInput">New Player Name:</label>
+                <input id="newNameInput" name="newNameInput" type="text" min="1" max="15" placeholder="Chad...." required><br>
+                <button name="submit" type="submit">Submit</button>
+            </form>
         </div>
-        <div id="player1Div">
-            <div id="player1Board"></div>
+    </dialog>
+    <div id="content" class="hidden"> 
+        <div id="gameInfo"> <!-- will contain player names and display who's turn it is .-->
+            <div id="namePlate" class="playerNamePlate">
+                <button data-player="1" id="changeNameBtn1">Change Name</button>
+                <div data-player="1" id="player1Name"></div>
+            </div>
+            <div class="playerNamePlate">
+                <button data-player="2" id="changeNameBtn2">Change Name</button>
+                <div data-player="2" id="player2Name"></div>
+            </div>
         </div>
-        <div id="player2Div">
-            <div id="player2Board"></div>
+        <div id="gameboardsContainer">
+            <div id="player1Div">
+                <div id="player1Board"></div>
+            </div>
+            <div id="player2Div">
+                <div id="player2Board"></div>
+            </div>
         </div>
+
     </div>
 </body>
 </html>

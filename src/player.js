@@ -12,8 +12,18 @@ export class Player{
         this.isComputer = true;
         this.name = "Bot";
     }
+    getName(){
+        return this.name;
+    }
+    setName(name){ 
+        this.name = name;
+    }
 
-    attack(coords){
+    placeShip(ship, startCoords, isHorizontal){
+        this.gameboard.placeShip(ship, startCoords, isHorizontal);
+    }
+
+    attackShip(coords){
         // player chooses coords and then at
         return this.gameboard.receiveAttack(coords);
     }

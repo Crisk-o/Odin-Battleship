@@ -1,3 +1,5 @@
+import { updateCell, renderGameboard } from "./ui.js";
+
 export class Cell{
     constructor(){
         //this.validStates = ["empty", "ship", "miss", "hit"]
@@ -21,8 +23,10 @@ export class Cell{
     }
 
     addShip(shipInst){
-        if(this.state === "empty") this.state = "ship";
-        this.ship = shipInst;
+        if(this.state === "empty") {
+            this.state = "ship";
+            this.ship = shipInst;
+        }
     }
     
     toString(){
@@ -47,7 +51,7 @@ export class Gameboard{
     placeShip(ship, startCoords, isHorizontal){
         // place given ship class at given coordinates. 
         let horizontal = false;
-        if(isHorizontal == "horizontal" || isHorizontal == "Horizontal"){
+        if(isHorizontal == "horizontal" || isHorizontal == "Horizontal" || isHorizontal == true){
             horizontal = true;
         }
         const cellsToOccupy = [];
@@ -77,12 +81,12 @@ export class Gameboard{
         // takes given coords, determines if attack hit ship or not
         // 'x' indice is the ROW and 'y' is the COLUMN.
         // ex: given [0,5] - target cell is @ row 0 column 5.
-        const target = this.board[r][c];
-        if(target.receiveHit() === false){ // missed hit, add to array.
+        const targetCell = this.board[r][c];
+        if(targetCell.receiveHit() === false){ // missed hit, add to array.
             this.missedHits.push(this.board[r][c]);
             return false;
         }
-        if(target.receiveHit() === true){
+        if(targetCell.receiveHit() === true){
             console.log("aaaaaaaaaaaa");
         }
         return true;

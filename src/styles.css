@@ -1,17 +1,39 @@
     body{
-        background-color: peachpuff;
+        background-image: radial-gradient(#9d885c,#5b7592);
         width: 100vw;
         height: 100vh;
         margin: 0;
         padding: 0;
+        overflow: hidden;
+        
+    }
+    button{
+        width: 100px;
+        height: 50px;
+        border-radius: 15px;
+    }
+    form{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .hidden {
+        display: none;
+        visibility: none;
+    }
+    #buttons{
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        padding: 5px;
     }
     #titleDiv{
         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
         color: darkgoldenrod;
-        height: 100px;
+        height: 75px;
         width: 100vw;
         background-color: black;
-        border: 1px solid darkgoldenrod;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -20,44 +42,114 @@
 
     }
     #content{
-        display: block;
         height: 100%;
         width: 100%;
     }
     #gameInfo {
-        background-color: blueviolet;
+        box-sizing: border-box;
+        border-bottom: 2px solid black;
         display: flex;
+        justify-content: space-around;
+        align-items: center;
         width: 100vw;
+        height: 100px;
     }
-
-    #gameInfo > div {
-        background-color: blueviolet;
-        display: flex;
-        width: 100vw;
+    .currentPlayer{
+        background-color: green;
     }
-    #player1Board{
+    .playerNamePlate{
+        box-sizing: border-box;
         display: flex;
-        border: 1px solid blue;
-        height: fit-content;
+        align-items: center;
+        justify-content: space-around;
+        color: black;
+        border: 1px solid black;
+        font-size: 24px;
+        width: 200px; 
+        height: 75px;
+        border-radius: 15px;
+        background-color: #b8c0ae;
+    }
+    #changeNameBtn{
+        height: 50px;
         width: fit-content;
+    }
+
+    #gameboardsContainer{
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
 
     }
-    .cellDiv{
-        background-color: aqua;
+    #player1Div{
+        box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        width:fit-content;
+        height: fit-content;
+        padding: 25px;
+    }
+    #player2Div{
+        box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        width:fit-content;
+        height: fit-content; 
+        padding: 25px;
+    }
+    .labels{
+        display: grid;
+        grid-template-columns: 50px;
+        grid-template-rows: 50px;
+        /* width: 10px; */
+        font-size: 30px;
+        color: black;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    
+    #player1Board{
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 50px);
+        grid-template-rows: repeat(auto-fill, 50px);
+        border: 1px solid #87754e;
+        box-shadow: 10px 15px 15px 15px #283342;
+        height: 500px;
+        width: 500px;
+    }
+    #player2Board{
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 50px);
+        grid-template-rows: repeat(auto-fill, 50px);
+        border: 1px solid #87754e;
+        box-shadow: 10px 15px 15px 15px #283342;
+        height: 500px;
+        width: 500px;
+    }
+    .cell{
+        box-sizing: border-box;
+        background-color: #37495a;
         width: 50px;
         height: 50px;
         border: 1px solid black;
+        cursor: pointer;
     }
-    .cellDiv.hit{
+    .cell.hit{
+        box-sizing: border-box;
         background-color: red;
         border-color: darkred;
     }
-    .cellDiv.miss{
+    .cell.miss{
+        box-sizing: border-box;
         background-color: antiquewhite;
         border-color: mintcream;
     }
-    .cellDiv.empty{
-        background-color: lightslategray;
-        border-color: darkgrey
+    .cell.ship{
+        box-sizing: border-box;
+        background-color: #858d7c;
+        border: 2px solid black;
     }
+
+
 
