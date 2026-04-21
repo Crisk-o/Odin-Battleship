@@ -7,6 +7,7 @@ export class Player{
         this.isComputer = false;
         this.gameboard =  new Gameboard();
         this.availableShips = this.#createFleet();
+        this.placedShipCount = 0;
     }
     setAsComputer(){
         this.isComputer = true;
@@ -23,9 +24,9 @@ export class Player{
         return this.gameboard.placeShip(ship, startCoords, isHorizontal);
     }
 
-    attackShip(coords){
+    attackShip(oppGameboard, coords){
         // player chooses coords and then at
-        return this.gameboard.receiveAttack(coords);
+        return oppGameboard.receiveAttack(coords);
     }
     getGameboard(){
         return this.gameboard.getGameboard();

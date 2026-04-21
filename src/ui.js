@@ -127,7 +127,7 @@ function createLabels(playerDiv){
 createLabels(player1Div);
 createLabels(player2Div);
 export function renderGameboard(player, container, onCellClick){
-    const boardContainer = document.getElementById(container)
+    const boardContainer = document.getElementById(container);
     boardContainer.innerHTML = ""; // for re-rendering
     player.board.forEach((row, r) => {
         row.forEach((cell, c) => {
@@ -135,9 +135,8 @@ export function renderGameboard(player, container, onCellClick){
             updateCell(cell, cellDiv);
             // this sends row/col data back to index.js upon click
             cellDiv.addEventListener('click', () => {
-                if(onCellClick){
-                    onCellClick(r,c);
-                } 
+                if(onCellClick) onCellClick(r, c);
+                
             });
             boardContainer.append(cellDiv);
         });

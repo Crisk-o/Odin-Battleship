@@ -14,7 +14,7 @@ export class Cell{
             this.state = "miss"
             return false; // miss
         }
-        return null; // already shot
+        return "Already attack here";
     }
 
     addShip(shipInst){
@@ -69,19 +69,16 @@ export class Gameboard{
         return true;
     }
 
-    receiveAttack([r, c]){
+    receiveAttack(oppGameboard, [r, c]){
         // takes given coords, determines if attack hit ship or not
         // 'x' indice is the ROW and 'y' is the COLUMN.
         // ex: given [0,5] - target cell is @ row 0 column 5.
-        return this.board[r][c].receiveHit();
+        return oppGameboard[r][c].receiveHit();
     }
 
-    allShipSunk(){
+    allShipsSunk(){
         // if all ships are sunk return true, else false.
         //.flat() makes board list of 100 cells and prevents us from iterating w/ nested for loops
-        return this.board.flat().every(cell => cell.state !== "ship"); // will return T/F 
+        return this.board.flat().every(cell => cell.state !== "ship");
     }
 }
-
-// game.placeShip(myShip, [0,0], "vert");
-//     console.table(board.map(row => row.map(cell => cell.state)));
