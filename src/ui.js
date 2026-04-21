@@ -1,6 +1,4 @@
-import { player1 , player2} from "./index.js";
-import { Player } from "./player.js";
-import { createPlayer, GameManager } from "./index.js";
+import boat from "./assets/ship.png";
 /*
 This file handles the DOM. It knows how to:
 
@@ -13,7 +11,6 @@ const contentDiv = document.getElementById('content');
 const gameboardsContainer = document.getElementById('gameboardsContainer');
 const player1Div = document.getElementById('player1Div');
 const player2Div = document.getElementById('player2Div');
-
 const player1Name = document.getElementById('player1Name');
 const player2Name = document.getElementById('player2Name');
 
@@ -21,11 +18,11 @@ const player2Name = document.getElementById('player2Name');
 const startGameBtn = document.getElementById("startGameBtn");
 const createPlayerBtn = document.getElementById('createPlayerBtn');
 const createPlayerDialog = document.getElementById("formDialog");
+
 startGameBtn.addEventListener('click', () => {
     startGameBtn.classList.toggle("hidden");
     createPlayerBtn.classList.toggle("hidden");
     contentDiv.classList.toggle("hidden");
-
 })
 createPlayerBtn.addEventListener('click', () => {
     createPlayerDialog.showModal();
@@ -38,8 +35,8 @@ form.addEventListener('submit', () => {
     createPlayer(formPlayerName);
     createPlayerDialog.close();
     form.reset();
-    // contentDiv.classList.toggle("hidden");
 });
+
 const changeP1NameBtn = document.getElementById('changeNameBtn1')
 const changeP2NameBtn = document.getElementById('changeNameBtn2');
 const changeNameDialog = document.getElementById('changeNameDialog');
@@ -75,20 +72,6 @@ changeNameForm.addEventListener('submit', (e) => {
 
 
 
-
-function createLabels(playerDiv){
-    const labels = document.createElement('div');
-    labels.classList.add('labels');
-    for(let i = 1; i <= 10; i++){
-        const labelDiv = document.createElement('div');
-        labelDiv.textContent =  i + "\n";
-        labels.append(labelDiv);
-    }
-    playerDiv.prepend(labels);
-}
-createLabels(player1Div);
-createLabels(player2Div);
-
 export function updateCell(cell, cellContainer){
     cellContainer.classList.add("cell"); 
 
@@ -103,23 +86,61 @@ export function updateCell(cell, cellContainer){
     }
  
 }
+const p1ShipsContainer = document.getElementById("availableShips1");
+const p2ShipsContainer = document.getElementById('availableShips2');
 export function appendName(player, container){
     const nameContainer = document.getElementById(container);
-    nameContainer.textContent = player.getName();
+    nameContainer.textContent = player.name;
+    player.availableShips.forEach(ship => {
+        const boatFigure = document.createElement('img');
+        const boatFigureP2 = document.createElement('img');
+        boatFigure.src = boat;
+        boatFigureP2.src = boat;
+        if(player.name === "player1"){
+            p1ShipsContainer.append(boatFigure);
+        }
+        else if(player.name === "player2"){
+            p2ShipsContainer.append(boatFigureP2);
+
+        }
+    });
 }
-export function renderGameboard(playerBoard, container){
+export function removeShipIcon(player){
+    if(player.name === "player1"){
+        p1ShipsContainer.firstElementChild.remove();
+    }
+    else if(player.name === "player2"){
+        p2ShipsContainer.firstElementChild.remove();
+    }
+}
+
+function createLabels(playerDiv){
+    const labels = document.createElement('div');
+    labels.classList.add('labels');
+    for(let i = 0; i <= 9; i++){
+        const labelDiv = document.createElement('div');
+        labelDiv.textContent =  i + "\n";
+        labels.append(labelDiv);
+    }
+    playerDiv.prepend(labels);
+}
+createLabels(player1Div);
+createLabels(player2Div);
+export function renderGameboard(player, container, onCellClick){
     const boardContainer = document.getElementById(container)
     boardContainer.innerHTML = ""; // for re-rendering
-    if(container.id === "player2Board"){
-        // make .ship cells hidden.....
-    }
-    // to figure out placement when player attack by clicking on a cellDiv:
-    // row = Math.floor(index/10) 
-    // col = index % 10 ex: cell 23 chosen(1-100 not 0-99) index is 22. 22 % 10 = col2.
-    playerBoard.board.flat().forEach((cell) => {
-        const cellDiv = document.createElement('div');
-        updateCell(cell, cellDiv);
-        boardContainer.append(cellDiv);
+    player.board.forEach((row, r) => {
+        row.forEach((cell, c) => {
+            const cellDiv = document.createElement('div');
+            updateCell(cell, cellDiv);
+            // this sends row/col data back to index.js upon click
+            cellDiv.addEventListener('click', () => {
+                if(onCellClick){
+                    onCellClick(r,c);
+                } 
+            });
+            boardContainer.append(cellDiv);
+        });
     });
 }
 

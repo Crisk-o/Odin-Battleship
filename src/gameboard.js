@@ -1,25 +1,20 @@
-import { updateCell, renderGameboard } from "./ui.js";
 
 export class Cell{
     constructor(){
-        //this.validStates = ["empty", "ship", "miss", "hit"]
         this.state = "empty";
         this.ship = null;
     }
-    getState(){
-        return this.state;
-    }
-  
-    //change state on hit, ship placement,
+
     receiveHit(){
         if(this.state === "ship"){
             this.state = "hit";
-            return true;
+            this.ship.hit();
+            return true; // hit
         }else if(this.state === "empty"){
             this.state = "miss"
-            return false;
+            return false; // miss
         }
-        return null;
+        return null; // already shot
     }
 
     addShip(shipInst){
@@ -49,11 +44,7 @@ export class Gameboard{
     getGameboard(){ return this.board; }
     
     placeShip(ship, startCoords, isHorizontal){
-        // place given ship class at given coordinates. 
-        let horizontal = false;
-        if(isHorizontal == "horizontal" || isHorizontal == "Horizontal" || isHorizontal == true){
-            horizontal = true;
-        }
+        const horizontal = (isHorizontal === "horizontal" || isHorizontal === "Horizontal" || isHorizontal == true);
         const cellsToOccupy = [];
         const [row, col] = startCoords;
 
@@ -62,10 +53,11 @@ export class Gameboard{
             const r = horizontal ? row: row + i;
             // if horizontal==true, col increases by i, otherwise stays the same.
             const c = horizontal ? col + i :col;
-
+            // checks boundary
             if(r < 0 || r >= 10 || c < 0 || c >= 10){
-                throw RangeError("Out of Gameboard area!");
+                return "Out of Gameboard area!";
             }
+            // ship already at location
             if(this.board[r][c].state !== "empty"){
                 return "Space already occupied!";
             }
@@ -81,15 +73,7 @@ export class Gameboard{
         // takes given coords, determines if attack hit ship or not
         // 'x' indice is the ROW and 'y' is the COLUMN.
         // ex: given [0,5] - target cell is @ row 0 column 5.
-        const targetCell = this.board[r][c];
-        if(targetCell.receiveHit() === false){ // missed hit, add to array.
-            this.missedHits.push(this.board[r][c]);
-            return false;
-        }
-        if(targetCell.receiveHit() === true){
-            console.log("aaaaaaaaaaaa");
-        }
-        return true;
+        return this.board[r][c].receiveHit();
     }
 
     allShipSunk(){

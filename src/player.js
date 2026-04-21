@@ -20,7 +20,7 @@ export class Player{
     }
 
     placeShip(ship, startCoords, isHorizontal){
-        this.gameboard.placeShip(ship, startCoords, isHorizontal);
+        return this.gameboard.placeShip(ship, startCoords, isHorizontal);
     }
 
     attackShip(coords){
