@@ -1,5 +1,5 @@
 import { Player } from "./player.js";
-import { renderGameboard, updateCell, appendName, removeShipIcon, styleCurrentPlayer} from "./ui.js";
+import { renderGameboard, updateCell, appendName, removeShipIcon, styleCurrentPlayer, styleWinner} from "./ui.js";
 import "./styles.css";
 // ships are [Carrier(5), Battleship(4), Destroyer(3), Submarine(3), Patrol Boat(2)]
 
@@ -108,7 +108,7 @@ function handleAttack(player, row, col){
     checkForWin();
 }
 
-async function takeAttackTurn(){
+async function startAttackPhase(){
         // asks if currentPlayer is player1
         const isP1 = currentPlayer.name === "player1";
         const attacker = isP1 ? player1 : player2;
@@ -156,13 +156,14 @@ function waitForPlacement(){
     });
 }
 
-function startAttackPhase(){
-    takeAttackTurn();    
-}
+
 function checkForWin(){
     if(player1.gameboard.allShipsSunk()) return "Player2 Wins";
     if(player2.gameboard.allShipsSunk()) return "Player1 Wins;"
     return null;
+}
+function declareWinner(winner){
+    styleWinner();
 }
 async function GameManager(){
     let winner = null;
@@ -173,15 +174,12 @@ async function GameManager(){
     startPlacementPhase();
     await waitForPlacement();
     while(!winner) {
-        await takeAttackTurn();
+        await startAttackPhase();
         winner = checkForWin();
-        if(!winner){
+        if(!winner)
             switchPlayer();
-        }
     }
-    startAttackPhase();
-    
-
+    declareWinner(winner);
 };
 
 GameManager();

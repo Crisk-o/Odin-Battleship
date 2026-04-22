@@ -93,27 +93,35 @@ const p2InfoDiv = document.getElementById('infoDiv2');
 
 export function styleCurrentPlayer(player) {
     if(player.name === "player1"){
+        p2InfoDiv.textContent = "Waiting for opponent...";
         p1InfoDiv.textContent = "Ready to attack opponent.";
         player1Name.classList.add('currentPlayer');
         player2Name.classList.toggle('currentPlayer');
     }
     else if(player.name === "player2"){
+        p1InfoDiv.textContent = "Waiting for opponent...";
         p2InfoDiv.textContent = "Ready to attack opponent.";
         player2Name.classList.add('currentPlayer');
         player1Name.classList.toggle('currentPlayer');
     }
 }
+export function styleWinner(winner){
+    const winnerContainer = document.createElement('div');
+    winnerContainer.classList.add('winner');
+    winnerContainer.textContent = `{$winner} Wins!`;
+    contentDiv.classList.toggle("hidden");
+    document.append(winnerContainer);
+    
+}
 export function playerInstructions(player){
     if(player.name === "player1"){
         if(player.placedShipCount !== 5){
-            const result = `${player.name} place your ships!`;
-            p1InfoDiv.append(result);
+            p1InfoDiv.textContent = "Place your ships!";
         }
     }
     else if(player.name === "player2"){
         if(player.placedShipCount !== 5){
-            const result = `${player.name} place your ships!`;
-            p2InfoDiv.append(result);
+            p2InfoDiv.textContent = "Place your ships!";
         }
     }
 }
@@ -121,7 +129,7 @@ export function playerInstructions(player){
 export function appendName(player, container){
     const nameContainer = document.getElementById(container);
     nameContainer.textContent = player.name;
-    // playerInstructions(player);
+    playerInstructions(player);
     player.availableShips.forEach(ship => {
         const boatFigure = document.createElement('img');
         const boatFigureP2 = document.createElement('img');
@@ -158,7 +166,7 @@ export function removeShipIcon(player){
 function createLabels(playerDiv){
     const labels = document.createElement('div');
     labels.classList.add('labels');
-    for(let i = 0; i <= 9; i++){
+    for(let i = 1; i <= 10; i++){
         const labelDiv = document.createElement('div');
         labelDiv.textContent =  i + "\n";
         labels.append(labelDiv);
