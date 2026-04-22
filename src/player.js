@@ -24,9 +24,8 @@ export class Player{
         return this.gameboard.placeShip(ship, startCoords, isHorizontal);
     }
 
-    attackShip(oppGameboard, coords){
-        // player chooses coords and then at
-        return oppGameboard.receiveAttack(coords);
+    attackShip(oppGameboard, r,c){
+        return oppGameboard.receiveAttack(r, c);
     }
     getGameboard(){
         return this.gameboard.getGameboard();

@@ -1,5 +1,5 @@
 import { Player } from "./player.js";
-import { renderGameboard, updateCell, appendName, removeShipIcon} from "./ui.js";
+import { renderGameboard, updateCell, appendName, removeShipIcon, styleCurrentPlayer} from "./ui.js";
 import "./styles.css";
 // ships are [Carrier(5), Battleship(4), Destroyer(3), Submarine(3), Patrol Boat(2)]
 
@@ -52,7 +52,9 @@ function randomShipPlacements(){
                 alreadyChosen.push([row,col]);
             }
         }
-    }   
+    } 
+    renderGameboard(player2.gameboard, "player2Board");
+  
 }
 function switchPlayer(){
     if(currentPlayer == player1){
@@ -63,14 +65,15 @@ function switchPlayer(){
         currentPlayer = player1;
         waitingPlayer = player2;
     }
+    styleCurrentPlayer(currentPlayer)
 }
 
 function handleAttack(player, row, col){
-    currentPlayer = player;
     if(player.name === "player1"){
-        const result = player1.attackShip(player2.gameboard, [row, col]);
+        // pass to attackShip - the opponent's gameboard, and [row,col]
+        const result = player1.attackShip(player2.gameboard, row, col);
         if(result !== "Already attack here"){
-            renderGameboard(player2.gameboard, "player2Board", handleAttack);
+            renderGameboard(player2.gameboard, "player2Board", (r,c) => handleAttack(player1,r,c));
             if(player2.gameboard.allShipsSunk()){
                 return `${player.name} Wins!`;
             }
@@ -78,34 +81,84 @@ function handleAttack(player, row, col){
         }
     }
     else if(player.name === "player2"){
-        const result = player2.attackShip(player1.gameboard, [row,col]);
+        if(player2.isComputer === true){
+            // computer attack function here.
+        }
+        const result = player2.attackShip(player1.gameboard, row,col);
         if(result !== "Already attack here"){
-            renderGameboard(player2.gameboard, "player2Board", handleAttack);
-            if(player2.gameboard.allShipsSunk()){
+            renderGameboard(player1.gameboard, "player1Board", (r,c) => handleAttack(player2,r,c));
+            if(player1.gameboard.allShipsSunk()){
                 return `${player.name} Wins!`;
             }
             switchPlayer();
         }
     }
+};
+// function awaitAttack(){
+//     return new Promise(resolve => {
+//         const checkTurnTaken = () =>{
+//             if()
+//         }
+//     })
+// }
+function takeAttackTurn(){
+    let turnTaken = false;
+    // while(turnTaken === false){
+        if(currentPlayer.name === "player1"){
+            renderGameboard(player2.gameboard, "player2Board", (r,c) => handleAttack(player1, r, c));
+            renderGameboard(player1.gameboard, "player1Board")
+            turnTaken = true;
+        }
+        else if(currentPlayer.name === "player2"){
+            renderGameboard(player1.gameboard, "player1Board", (r,c) => handleAttack(player2, r, c)); 
+            renderGameboard(player2.gameboard, "player2Board") 
+            turnTaken = true;
+        }
+    //}
 }
-const GameManager = (() => {
-    /* UI INIT. */
-    const getCurrentPlayer = () => currentPlayer.getName();
-    const getWaitingPlayer = () => waitingPlayer.getName();
+function initializeUI(){
+    renderGameboard(player1.gameboard, "player1Board");
+    renderGameboard(player2.gameboard, "player2Board");
     appendName(player1, "player1Name");
     appendName(player2, "player2Name");
+}
+function startPlacementPhase(){
     renderGameboard(player1.gameboard, "player1Board", (r,c) => handlePlacement(player1, r, c));
     randomShipPlacements();
-    renderGameboard(player2.gameboard, "player2Board", (r,c) => handleAttack(currentPlayer, r, c));    
-    /* ATTACK PHASE */
-    // goes until one players ships are all sunk
-    // while(!(player1.gameboard.allShipsSunk() || player2.gameboard.allShipsSunk())){
-    //     handleAttack(getCurrentPlayer, );
+}
+function waitForPlacement(){
+    let maxShipCount = 5;
+    return new Promise(resolve => {
+        // check function 'checks' for count amount
+        const check = () => {
+            // if condition is met, resolve promise.
+            if(player1.placedShipCount === maxShipCount && player2.placedShipCount === maxShipCount){
+                console.log("ALL SHIPS PLACED. RESOLVING PROMISE");
+                resolve();
+            }
+            // condition not met, wait 2sec and try again.
+            else{
+                setTimeout(check, 2000);
+            }
+        };
+        check();
+    });
+}
+async function startAttackPhase(){
+    takeAttackTurn();
+}
 
-    // }
+async function GameManager(){
+    const getCurrentPlayer = () => currentPlayer.getName();
+    const getWaitingPlayer = () => waitingPlayer.getName();
+    /* UI INIT. */
+    initializeUI();
+    startPlacementPhase();
+    await waitForPlacement();
+    startAttackPhase();
+    
 
-
-});
+};
 
 GameManager();
 

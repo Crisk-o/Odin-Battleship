@@ -69,11 +69,11 @@ export class Gameboard{
         return true;
     }
 
-    receiveAttack(oppGameboard, [r, c]){
+    receiveAttack(r, c){
         // takes given coords, determines if attack hit ship or not
         // 'x' indice is the ROW and 'y' is the COLUMN.
         // ex: given [0,5] - target cell is @ row 0 column 5.
-        return oppGameboard[r][c].receiveHit();
+        return this.board[r][c].receiveHit();
     }
 
     allShipsSunk(){

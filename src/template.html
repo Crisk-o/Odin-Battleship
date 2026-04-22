@@ -7,9 +7,7 @@
 </head>
 <body>
     <div id="titleDiv"><p id="titleDiv">Battleship</p></div>
-    <div id="buttons" >
-        <button id="startGameBtn">Start Game</button>
-        <button id="createPlayerBtn" class="hidden">Create Player</button>
+    <div>
         <dialog id="formDialog">
             <div id="formContainer">
                 <form id="createPlayerForm" method="dialog">
@@ -31,17 +29,27 @@
             </form>
         </div>
     </dialog>
+    <div id="buttons" class="hidden" >
+        <button id="startGameBtn">Start Game</button>
+        <button id="createPlayerBtn">Create Player</button>
+    </div>
     <div id="content" class="hidden"> 
         <div id="gameInfo"> <!-- will contain player names and display who's turn it is .-->
             <div id="namePlate" class="playerNamePlate">
-                <div class="availableShips" id="availableShips1"></div>
-                <button data-player="1" id="changeNameBtn1">Change Name</button>
-                <div data-player="1" id="player1Name"></div>
+                <div class="pName">
+                    <button class="changeNameBtn" data-player="1" id="changeNameBtn1">Change Name</button>
+                    <div data-player="1" id="player1Name"></div>
+                </div>
+                <div class="info" id="infoDiv1"></div>
+                <div class="availableShips hidden" id="availableShips1" ></div>
             </div>
             <div class="playerNamePlate">
-                <div class="availableShips" id="availableShips2"></div>
-                <button data-player="2" id="changeNameBtn2">Change Name</button>
-                <div data-player="2" id="player2Name"></div>
+                <div class="pName">
+                    <button class="changeNameBtn" data-player="2" id="changeNameBtn2">Change Name</button>
+                    <div data-player="2" id="player2Name"></div>
+                </div>
+                <div class="info" id="infoDiv2"></div>
+                <div class="availableShips hidden" id="availableShips2"></div>
             </div>
         </div>
         <div id="gameboardsContainer">

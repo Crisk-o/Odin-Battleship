@@ -28,7 +28,6 @@ createPlayerBtn.addEventListener('click', () => {
     createPlayerDialog.showModal();
 })
 
-
 const form = document.getElementById('createPlayerForm');
 const formPlayerName = document.getElementById('nameInput');
 form.addEventListener('submit', () => {
@@ -88,9 +87,39 @@ export function updateCell(cell, cellContainer){
 }
 const p1ShipsContainer = document.getElementById("availableShips1");
 const p2ShipsContainer = document.getElementById('availableShips2');
+const p1InfoDiv = document.getElementById('infoDiv1');
+const p2InfoDiv = document.getElementById('infoDiv2');
+
+
+export function styleCurrentPlayer(player) {
+    if(player.name === "player1"){
+        player1Name.classList.add('currentPlayer');
+        player2Name.classList.toggle('currentPlayer');
+    }
+    else if(player.name === "player2"){
+        player2Name.classList.add('currentPlayer');
+        player1Name.classList.toggle('currentPlayer');
+    }
+}
+export function playerInstructions(player){
+    if(player.name === "player1"){
+        if(player.placedShipCount !== 5){
+            const result = `${player.name} place your ships!`;
+            p1InfoDiv.append(result);
+        }
+    }
+    else if(player.name === "player2"){
+        if(player.placedShipCount !== 5){
+            const result = `${player.name} place your ships!`;
+            p2InfoDiv.append(result);
+        }
+    }
+}
+
 export function appendName(player, container){
     const nameContainer = document.getElementById(container);
     nameContainer.textContent = player.name;
+    // playerInstructions(player);
     player.availableShips.forEach(ship => {
         const boatFigure = document.createElement('img');
         const boatFigureP2 = document.createElement('img');
@@ -101,17 +130,27 @@ export function appendName(player, container){
         }
         else if(player.name === "player2"){
             p2ShipsContainer.append(boatFigureP2);
-
         }
     });
 }
 export function removeShipIcon(player){
     if(player.name === "player1"){
         p1ShipsContainer.firstElementChild.remove();
+        p1InfoDiv.textContent = `${p1ShipsContainer.children.length} ships left to place.`
+        if(p1ShipsContainer.children.length === 0){
+            p1InfoDiv.textContent  = "All ships placed. Prepare to attack!";
+            p1ShipsContainer.remove();
+        }
     }
     else if(player.name === "player2"){
         p2ShipsContainer.firstElementChild.remove();
+        p2InfoDiv.textContent = `${p2ShipsContainer.children.length} ships left to place.`
+        if(p2ShipsContainer.children.length === 0){
+            p2InfoDiv.textContent = "All ships placed. Prepare to attack!";
+            p2ShipsContainer.remove();
+        }
     }
+    
 }
 
 function createLabels(playerDiv){
@@ -136,7 +175,6 @@ export function renderGameboard(player, container, onCellClick){
             // this sends row/col data back to index.js upon click
             cellDiv.addEventListener('click', () => {
                 if(onCellClick) onCellClick(r, c);
-                
             });
             boardContainer.append(cellDiv);
         });
