@@ -93,10 +93,12 @@ const p2InfoDiv = document.getElementById('infoDiv2');
 
 export function styleCurrentPlayer(player) {
     if(player.name === "player1"){
+        p1InfoDiv.textContent = "Ready to attack opponent.";
         player1Name.classList.add('currentPlayer');
         player2Name.classList.toggle('currentPlayer');
     }
     else if(player.name === "player2"){
+        p2InfoDiv.textContent = "Ready to attack opponent.";
         player2Name.classList.add('currentPlayer');
         player1Name.classList.toggle('currentPlayer');
     }

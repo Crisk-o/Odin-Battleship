@@ -54,9 +54,10 @@ function randomShipPlacements(){
         }
     } 
     renderGameboard(player2.gameboard, "player2Board");
-  
 }
+
 function switchPlayer(){
+    console.log("currentPlayer: " + currentPlayer.name); // remove later.
     if(currentPlayer == player1){
         currentPlayer = player2
         waitingPlayer = player1;
@@ -65,7 +66,7 @@ function switchPlayer(){
         currentPlayer = player1;
         waitingPlayer = player2;
     }
-    styleCurrentPlayer(currentPlayer)
+    styleCurrentPlayer(currentPlayer);
 }
 
 function handleAttack(player, row, col){
@@ -94,27 +95,21 @@ function handleAttack(player, row, col){
         }
     }
 };
-// function awaitAttack(){
-//     return new Promise(resolve => {
-//         const checkTurnTaken = () =>{
-//             if()
-//         }
-//     })
-// }
-function takeAttackTurn(){
-    let turnTaken = false;
-    // while(turnTaken === false){
-        if(currentPlayer.name === "player1"){
-            renderGameboard(player2.gameboard, "player2Board", (r,c) => handleAttack(player1, r, c));
-            renderGameboard(player1.gameboard, "player1Board")
-            turnTaken = true;
-        }
-        else if(currentPlayer.name === "player2"){
-            renderGameboard(player1.gameboard, "player1Board", (r,c) => handleAttack(player2, r, c)); 
-            renderGameboard(player2.gameboard, "player2Board") 
-            turnTaken = true;
-        }
-    //}
+
+async function takeAttackTurn(){
+        // asks if currentPlayer is player1
+        const isP1 = currentPlayer.name === "player1";
+        const attacker = isP1 ? player1 : player2;
+        const defender = isP1 ? player2 : player1;
+        const attackerBoard = isP1 ? "player1Board" : "player2Board";
+        const defenderBoard = isP1 ? "player2Board" : "player1Board";
+        await new Promise(resolve => {
+            renderGameboard(defender.gameboard, defenderBoard, (r,c) => {
+                handleAttack(attacker, r,c,);
+            })
+        });
+        renderGameboard(attacker.gameboard, attackerBoard);
+        console.log("Finished turn. Switching player....");
 }
 function initializeUI(){
     renderGameboard(player1.gameboard, "player1Board");
@@ -123,9 +118,11 @@ function initializeUI(){
     appendName(player2, "player2Name");
 }
 function startPlacementPhase(){
+    // for 'real' player to click on board for placements.
     renderGameboard(player1.gameboard, "player1Board", (r,c) => handlePlacement(player1, r, c));
-    randomShipPlacements();
+    randomShipPlacements(); // computer places ships at random.
 }
+
 function waitForPlacement(){
     let maxShipCount = 5;
     return new Promise(resolve => {
@@ -144,6 +141,7 @@ function waitForPlacement(){
         check();
     });
 }
+
 async function startAttackPhase(){
     takeAttackTurn();
 }
