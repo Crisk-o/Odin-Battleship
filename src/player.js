@@ -11,7 +11,7 @@ export class Player{
     }
     setAsComputer(){
         this.isComputer = true;
-        this.name = "Bot";
+        // this.name = "Bot";
     }
     getName(){
         return this.name;

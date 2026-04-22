@@ -14,7 +14,7 @@ export class Cell{
             this.state = "miss"
             return false; // miss
         }
-        return "Already attack here";
+        return "Already attacked here";
     }
 
     addShip(shipInst){
@@ -70,9 +70,6 @@ export class Gameboard{
     }
 
     receiveAttack(r, c){
-        // takes given coords, determines if attack hit ship or not
-        // 'x' indice is the ROW and 'y' is the COLUMN.
-        // ex: given [0,5] - target cell is @ row 0 column 5.
         return this.board[r][c].receiveHit();
     }
 
