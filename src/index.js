@@ -158,12 +158,12 @@ function waitForPlacement(){
 
 
 function checkForWin(){
-    if(player1.gameboard.allShipsSunk()) return "Player2 Wins";
-    if(player2.gameboard.allShipsSunk()) return "Player1 Wins;"
+    if(player1.gameboard.allShipsSunk()) return player2;
+    if(player2.gameboard.allShipsSunk()) return player1
     return null;
 }
 function declareWinner(winner){
-    styleWinner();
+    styleWinner(winner);
 }
 async function GameManager(){
     let winner = null;

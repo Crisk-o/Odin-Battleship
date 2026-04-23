@@ -107,10 +107,14 @@ export function styleCurrentPlayer(player) {
 }
 export function styleWinner(winner){
     const winnerContainer = document.createElement('div');
+    const restartBtn = document.createElement('button');
+    restartBtn.addEventListener('click', () => window.location.reload());
+    restartBtn.textContent = "Restart Game";
     winnerContainer.classList.add('winner');
-    winnerContainer.textContent = `{$winner} Wins!`;
+    winnerContainer.textContent = `${winner.name} Wins!`;
     contentDiv.classList.toggle("hidden");
-    document.append(winnerContainer);
+    winnerContainer.append(restartBtn);
+    document.body.append(winnerContainer);
     
 }
 export function playerInstructions(player){
