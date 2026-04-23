@@ -16,13 +16,21 @@ const player2Name = document.getElementById('player2Name');
 
 
 const startGameBtn = document.getElementById("startGameBtn");
+const startGameScreen = document.getElementById("startGameScreen");
+const startScreenTitle = document.getElementById("startScreenTitle");
+const titleDiv = document.getElementById('titleDiv');
 const createPlayerBtn = document.getElementById('createPlayerBtn');
 const createPlayerDialog = document.getElementById("formDialog");
 
 startGameBtn.addEventListener('click', () => {
+    startGameScreen.remove();
+    startScreenTitle.remove();
     startGameBtn.classList.toggle("hidden");
+    titleDiv.classList.toggle("hidden");
+
+    // startGameScreen.classList.toggle("hidden");
     createPlayerBtn.classList.toggle("hidden");
-    contentDiv.classList.toggle("hidden");
+    // contentDiv.classList.toggle("hidden");
 })
 createPlayerBtn.addEventListener('click', () => {
     createPlayerDialog.showModal();
@@ -89,7 +97,6 @@ const p1ShipsContainer = document.getElementById("availableShips1");
 const p2ShipsContainer = document.getElementById('availableShips2');
 const p1InfoDiv = document.getElementById('infoDiv1');
 const p2InfoDiv = document.getElementById('infoDiv2');
-
 
 export function styleCurrentPlayer(player) {
     if(player.name === "player1"){

@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Odin: Battleship</title>
 </head>
 <body>
-    <div id="titleDiv"><p id="titleDiv">Battleship</p></div>
+    <div class="hidden" id="titleDiv">Battleship</div>
     <div>
         <dialog id="formDialog">
             <div id="formContainer">
@@ -29,11 +32,15 @@
             </form>
         </div>
     </dialog>
-    <div id="buttons" class="hidden" >
-        <button id="startGameBtn">Start Game</button>
-        <button id="createPlayerBtn">Create Player</button>
+
+    <div id="startGameScreen">
+        <div id="startScreenTitle"><p id="startScreenTitle">Battleship</p></div>
+        <div id="buttons">
+            <button id="startGameBtn" class="bounce-button">Start Game</button>
+            <button class="hidden" id="createPlayerBtn">Create Player</button>
+        </div>
     </div>
-    <div id="content" class="hidden"> 
+    <div id="content"> 
         <div id="gameInfo"> <!-- will contain player names and display who's turn it is .-->
             <div id="namePlate" class="playerNamePlate">
                 <div class="pName">
