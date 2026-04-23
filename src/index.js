@@ -42,12 +42,18 @@ function handlePlacement(player, row, col){
 let alreadyChosen = [];
 function randomShipPlacements(){
     let i = 0;
-    let fleet = player2.availableShips;
+    let horizontal = true;
+    const orientations = [0,1]; // 0 = vertical, 1 = horizontal
+    let orientation = Math.floor(Math.random() * orientations.length);
+    if(orientation === orientation[0]){
+        horizontal = false;
+    }
+    const fleet = player2.availableShips;
     while(i < fleet.length){
         let row = Math.floor(Math.random() * fleet.length);
         let col = Math.floor(Math.random() * fleet.length);
         if(!alreadyChosen.includes([row,col])){
-            let result = player2.placeShip(fleet[i], [row, col], true);
+            let result = player2.placeShip(fleet[i], [row, col], horizontal);
             if(result === true){
                 player2.placedShipCount += 1;
                 i++;
@@ -56,20 +62,25 @@ function randomShipPlacements(){
             }
         }
     } 
-    renderGameboard(player2.gameboard, "player2Board");
+    renderGameboard(player2.gameboard, "player2Board","",true);
 }
 // for use CPU attack phase.
 let missedShots = [];
-function computerAttack(){
+async function computerAttack(){
+    const fleet = player2.availableShips;
     let row = Math.floor(Math.random() * fleet.length);
     let col = Math.floor(Math.random() * fleet.length);
-    if(!missedShots.includes[row,col]){
+    if(!(missedShots.includes[row,col])){
         const result = player2.attackShip(player1.gameboard, row, col);
         if(result !== "Already attacked here"){
-            renderGameboard(player1.gameboard, "player1Board", (r,c) => handleAttack(player2,r,c));
-            if(result === false){
-                missedShots.push([row,col]);
-            }
+            renderGameboard(player1.gameboard, "player1Board", (r,c) => handleAttack(player2,r,c), false);
+        if(result === false){
+            missedShots.push([row,col]);
+        }
+        }
+        else{
+            // make computer go again with a place it hasn't attack already
+            computerAttack();
         }     
     }
 }
@@ -88,22 +99,25 @@ function switchPlayer(){
     styleCurrentPlayer(currentPlayer);
 }
 
+
+
 function handleAttack(player, row, col){
     if(player.name === "player1"){
         // pass to attackShip - the opponent's gameboard, and [row,col]
         const result = player1.attackShip(player2.gameboard, row, col);
         if(result !== "Already attacked here"){
-            renderGameboard(player2.gameboard, "player2Board", (r,c) => handleAttack(player1,r,c));
+            renderGameboard(player2.gameboard, "player2Board", (r,c) => handleAttack(player1,r,c), true);
         }
     }
     else if(player.name === "player2"){
-        renderGameboard(player1.gameboard, "player1Board", (r,c) => handleAttack(player2,r,c));
-        const result = player2.attackShip(player1.gameboard, row,col);
-        if(result !== "Already attacked here")
+        if(player2.isComputer === true){
+            computerAttack();
+        }else{
             renderGameboard(player1.gameboard, "player1Board", (r,c) => handleAttack(player2,r,c));
-        // if(player2.isComputer === true){
-        //     // computerAttack();
-        // }
+            const result = player2.attackShip(player1.gameboard, row,col);
+            if(result !== "Already attacked here")
+                renderGameboard(player1.gameboard, "player1Board", (r,c) => handleAttack(player2,r,c));
+        }
     }
     checkForWin();
 }
@@ -116,13 +130,17 @@ async function startAttackPhase(){
         const attackerBoard = isP1 ? "player1Board" : "player2Board";
         const defenderBoard = isP1 ? "player2Board" : "player1Board";
         renderGameboard(attacker.gameboard, attackerBoard);
-
-        await new Promise(resolve => {
-            renderGameboard(defender.gameboard, defenderBoard, (r,c) => {
-                handleAttack(attacker, r,c,);
-                resolve();
-            })
-        });
+        if(attacker.isComputer == true){
+            computerAttack();
+        }
+        else{
+            await new Promise(resolve => {
+                renderGameboard(defender.gameboard, defenderBoard, (r,c) => {
+                    handleAttack(attacker, r,c,);
+                    resolve();
+                })
+            });
+        }
         console.log("Finished turn. Switching player....");
 }
 function initializeUI(){

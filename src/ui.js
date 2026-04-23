@@ -186,18 +186,29 @@ function createLabels(playerDiv){
 }
 createLabels(player1Div);
 createLabels(player2Div);
-export function renderGameboard(player, container, onCellClick){
+export function renderGameboard(player, container, onCellClick, isHidden){
     const boardContainer = document.getElementById(container);
     boardContainer.innerHTML = ""; // for re-rendering
     player.board.forEach((row, r) => {
         row.forEach((cell, c) => {
             const cellDiv = document.createElement('div');
-            updateCell(cell, cellDiv);
-            // this sends row/col data back to index.js upon click
-            cellDiv.addEventListener('click', () => {
-                if(onCellClick) onCellClick(r, c);
-            });
-            boardContainer.append(cellDiv);
+            if(isHidden){
+                if(cell.state === "ship"){
+                    cellDiv.classList.add('cell');
+                }
+                updateCell(cell, cellDiv);
+                cellDiv.addEventListener('click', () => {
+                    if(onCellClick) onCellClick(r, c);
+                });
+                boardContainer.append(cellDiv);
+            }
+            else{
+                updateCell(cell, cellDiv);
+                cellDiv.addEventListener('click', () => {
+                    if(onCellClick) onCellClick(r, c);
+                });
+                boardContainer.append(cellDiv);
+            }
         });
     });
 }
