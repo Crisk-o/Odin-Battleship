@@ -193,14 +193,16 @@ export function renderGameboard(player, container, onCellClick, isHidden){
         row.forEach((cell, c) => {
             const cellDiv = document.createElement('div');
             if(isHidden){
-                if(cell.state === "ship"){
-                    cellDiv.classList.add('cell');
-                }
-                updateCell(cell, cellDiv);
                 cellDiv.addEventListener('click', () => {
                     if(onCellClick) onCellClick(r, c);
                 });
-                boardContainer.append(cellDiv);
+                if(cell.state === "ship"){
+                    cellDiv.classList.add('cell');
+                    boardContainer.append(cellDiv);
+                }else{
+                    updateCell(cell, cellDiv);
+                    boardContainer.append(cellDiv);
+                }
             }
             else{
                 updateCell(cell, cellDiv);

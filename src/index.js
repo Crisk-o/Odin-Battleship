@@ -9,7 +9,7 @@ export function createPlayer(name){
 }
 const player1 = new Player("player1");
 const player2 = new Player("player2");
-player2.setAsComputer();
+// player2.setAsComputer();
 let currentPlayer = player1;
 let waitingPlayer = player2;
 let shipIndex = 0;
@@ -59,10 +59,11 @@ function randomShipPlacements(){
                 i++;
                 removeShipIcon(player2)
                 alreadyChosen.push([row,col]);
+                renderGameboard(player2.gameboard, "player2Board", handlePlacement(player2, row, col), true);
             }
         }
     } 
-    renderGameboard(player2.gameboard, "player2Board","",true);
+    // renderGameboard(player2.gameboard, "player2Board","",true);
 }
 // for use CPU attack phase.
 let missedShots = [];
@@ -74,14 +75,14 @@ async function computerAttack(){
         const result = player2.attackShip(player1.gameboard, row, col);
         if(result !== "Already attacked here"){
             renderGameboard(player1.gameboard, "player1Board", (r,c) => handleAttack(player2,r,c), false);
+        }
         if(result === false){
             missedShots.push([row,col]);
         }
-        }
-        else{
-            // make computer go again with a place it hasn't attack already
-            computerAttack();
-        }     
+        // else{
+        //     // make computer go again with a place it hasn't attack already
+        //     computerAttack();
+        // }     
     }
 }
 
@@ -113,7 +114,7 @@ function handleAttack(player, row, col){
         if(player2.isComputer === true){
             computerAttack();
         }else{
-            renderGameboard(player1.gameboard, "player1Board", (r,c) => handleAttack(player2,r,c));
+            // renderGameboard(player1.gameboard, "player1Board", (r,c) => handleAttack(player2,r,c));
             const result = player2.attackShip(player1.gameboard, row,col);
             if(result !== "Already attacked here")
                 renderGameboard(player1.gameboard, "player1Board", (r,c) => handleAttack(player2,r,c));
@@ -129,7 +130,12 @@ async function startAttackPhase(){
         const defender = isP1 ? player2 : player1;
         const attackerBoard = isP1 ? "player1Board" : "player2Board";
         const defenderBoard = isP1 ? "player2Board" : "player1Board";
-        renderGameboard(attacker.gameboard, attackerBoard);
+        if(attacker.name === player2.name && attacker.isComputer === true){
+            renderGameboard(attacker.gameboard, attackerBoard,"", true);
+        }
+        else{
+            renderGameboard(attacker.gameboard, attackerBoard);
+        }
         if(attacker.isComputer == true){
             computerAttack();
         }
@@ -138,14 +144,14 @@ async function startAttackPhase(){
                 renderGameboard(defender.gameboard, defenderBoard, (r,c) => {
                     handleAttack(attacker, r,c,);
                     resolve();
-                })
+                }, true);
             });
         }
         console.log("Finished turn. Switching player....");
 }
 function initializeUI(){
     renderGameboard(player1.gameboard, "player1Board");
-    renderGameboard(player2.gameboard, "player2Board");
+    renderGameboard(player2.gameboard, "player2Board","",true);
     appendName(player1, "player1Name");
     appendName(player2, "player2Name");
 }
@@ -180,15 +186,17 @@ function checkForWin(){
     if(player2.gameboard.allShipsSunk()) return player1
     return null;
 }
+async function wait(){
+    //
+    return new Promise(resolve => setTimeout(resolve, 5000));
+}
 function declareWinner(winner){
     styleWinner(winner);
 }
 async function GameManager(){
     let winner = null;
-    const getCurrentPlayer = () => currentPlayer.getName();
-    const getWaitingPlayer = () => waitingPlayer.getName();
-    /* UI INIT. */
     initializeUI();
+    await wait();
     startPlacementPhase();
     await waitForPlacement();
     while(!winner) {
