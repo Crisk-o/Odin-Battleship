@@ -8,7 +8,15 @@ export class Player{
         this.gameboard =  new Gameboard();
         this.availableShips = this.#createFleet();
         this.placedShipCount = 0;
+        this.isHorizontal = false;
     }
+    setOrientation(boolOrient){
+        this.isHorizontal = boolOrient;
+    }
+    getOrientation(){
+        return this.isHorizontal;
+    }
+
     setAsComputer(){
         this.isComputer = true;
         // this.name = "Bot";

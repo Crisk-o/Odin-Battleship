@@ -3,23 +3,23 @@ import { renderGameboard, updateCell, appendName, removeShipIcon, styleCurrentPl
 import "./styles.css";
 // ships are [Carrier(5), Battleship(4), Destroyer(3), Submarine(3), Patrol Boat(2)]
 
-
-export function createPlayer(name){
-    const player = new Player(name);
-}
-const player1 = new Player("player1");
-const player2 = new Player("player2");
-// player2.setAsComputer();
+export const player1 = new Player("player1");
+export const player2 = new Player("player2");
 let currentPlayer = player1;
 let waitingPlayer = player2;
 let shipIndex = 0;
 
-
-
+function setOrientation(player, orient){
+    player.setOrientation(orient);
+}
+function getOrientation(player){
+    return player.getOrientation();
+}
 function handlePlacement(player, row, col){
     const fleet = player.availableShips;
     /* SWITCH THIS W/ A ROTATE BUTTON LATER */
-    const isHorizontal = true;
+
+    const isHorizontal = getOrientation(player);
     if(shipIndex < fleet.length){
         const currentShip = fleet[shipIndex];
         const result = player.placeShip(currentShip, [row, col], isHorizontal);
@@ -32,10 +32,8 @@ function handlePlacement(player, row, col){
             });
         }
     }
-    else if(shipIndex === fleet.length)
+    else if(player.placedShipCount === fleet.length)
         alert("All ships placed!");
-    else
-        alert("Did nothing...."); // space occupied 
 }
 
 // for use when CPU is chosen to play
@@ -63,26 +61,30 @@ function randomShipPlacements(){
             }
         }
     } 
-    // renderGameboard(player2.gameboard, "player2Board","",true);
 }
 // for use CPU attack phase.
 let missedShots = [];
 async function computerAttack(){
+    let shotLaunched = false;
     const fleet = player2.availableShips;
-    let row = Math.floor(Math.random() * fleet.length);
-    let col = Math.floor(Math.random() * fleet.length);
-    if(!(missedShots.includes[row,col])){
-        const result = player2.attackShip(player1.gameboard, row, col);
-        if(result !== "Already attacked here"){
-            renderGameboard(player1.gameboard, "player1Board", (r,c) => handleAttack(player2,r,c), false);
+    let row = Math.floor(Math.random() * 10);
+    let col = Math.floor(Math.random() * 10);
+    while(shotLaunched == false){
+        if(!(missedShots.includes[row,col])){
+            const result = player2.attackShip(player1.gameboard, row, col);
+            if(result === false){
+                missedShots.push([row,col]);
+                shotLaunched = true;
+            }  
+            if(result === true){
+                renderGameboard(player1.gameboard, "player1Board", (r,c) => handleAttack(player2,r,c), false);
+                shotLaunched = true;
+            }
+            if(result === "Already attacked here"){
+                row = Math.floor(Math.random() * fleet.length);
+                col = Math.floor(Math.random() * fleet.length);
+            }
         }
-        if(result === false){
-            missedShots.push([row,col]);
-        }
-        // else{
-        //     // make computer go again with a place it hasn't attack already
-        //     computerAttack();
-        // }     
     }
 }
 
@@ -98,6 +100,10 @@ function switchPlayer(){
     console.log("currentPlayer (after switch): " + currentPlayer.name); // remove later.
 
     styleCurrentPlayer(currentPlayer);
+}
+
+async function waitHalfSecond(){
+    return new Promise(resolve => setTimeout(resolve, 500));
 }
 
 
@@ -130,16 +136,13 @@ async function startAttackPhase(){
         const defender = isP1 ? player2 : player1;
         const attackerBoard = isP1 ? "player1Board" : "player2Board";
         const defenderBoard = isP1 ? "player2Board" : "player1Board";
+
         if(attacker.name === player2.name && attacker.isComputer === true){
             renderGameboard(attacker.gameboard, attackerBoard,"", true);
-        }
-        else{
-            renderGameboard(attacker.gameboard, attackerBoard);
-        }
-        if(attacker.isComputer == true){
             computerAttack();
         }
         else{
+            renderGameboard(attacker.gameboard, attackerBoard);
             await new Promise(resolve => {
                 renderGameboard(defender.gameboard, defenderBoard, (r,c) => {
                     handleAttack(attacker, r,c,);
@@ -149,25 +152,33 @@ async function startAttackPhase(){
         }
         console.log("Finished turn. Switching player....");
 }
+
 function initializeUI(){
     renderGameboard(player1.gameboard, "player1Board");
-    renderGameboard(player2.gameboard, "player2Board","",true);
+    renderGameboard(player2.gameboard, "player2Board");
     appendName(player1, "player1Name");
     appendName(player2, "player2Name");
 }
-function startPlacementPhase(){
+
+async function startPlacementPhase(){
     // for 'real' player to click on board for placements.
     renderGameboard(player1.gameboard, "player1Board", (r,c) => handlePlacement(player1, r, c));
-    randomShipPlacements(); // computer places ships at random.
+    await waitForPlacement(player1);
+    if(player2.isComputer === true){
+        randomShipPlacements(); // computer places ships at random.
+    }
+    else{
+        shipIndex = 0;
+        renderGameboard(player2.gameboard, "player2Board", (r,c) => handlePlacement(player2, r, c));
+    }
 }
-
-function waitForPlacement(){
+function waitForPlacement(player){
     let maxShipCount = 5;
     return new Promise(resolve => {
         // check function 'checks' for count amount
         const check = () => {
             // if condition is met, resolve promise.
-            if(player1.placedShipCount === maxShipCount && player2.placedShipCount === maxShipCount){
+            if(player.placedShipCount === maxShipCount){
                 console.log("ALL SHIPS PLACED. RESOLVING PROMISE");
                 resolve();
             }
@@ -186,19 +197,18 @@ function checkForWin(){
     if(player2.gameboard.allShipsSunk()) return player1
     return null;
 }
-async function wait(){
-    //
-    return new Promise(resolve => setTimeout(resolve, 5000));
-}
 function declareWinner(winner){
     styleWinner(winner);
 }
+
+
+
 async function GameManager(){
     let winner = null;
     initializeUI();
-    await wait();
     startPlacementPhase();
-    await waitForPlacement();
+    await waitForPlacement(player1);
+    await waitForPlacement(player2);
     while(!winner) {
         await startAttackPhase();
         winner = checkForWin();

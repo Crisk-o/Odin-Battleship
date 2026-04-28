@@ -1,4 +1,6 @@
 import boat from "./assets/ship.png";
+import arrows from "./assets/arrow-up-down.png";
+import { player1, player2 } from "./index.js"
 /*
 This file handles the DOM. It knows how to:
 
@@ -14,70 +16,31 @@ const player2Div = document.getElementById('player2Div');
 const player1Name = document.getElementById('player1Name');
 const player2Name = document.getElementById('player2Name');
 
-
 const startGameBtn = document.getElementById("startGameBtn");
 const startGameScreen = document.getElementById("startGameScreen");
 const startScreenTitle = document.getElementById("startScreenTitle");
 const titleDiv = document.getElementById('titleDiv');
 const createPlayerBtn = document.getElementById('createPlayerBtn');
-const createPlayerDialog = document.getElementById("formDialog");
+const setBotDialog = document.getElementById("formDialog");
 
 startGameBtn.addEventListener('click', () => {
+    setBotDialog.showModal();
     startGameScreen.remove();
     startScreenTitle.remove();
     startGameBtn.classList.toggle("hidden");
     titleDiv.classList.toggle("hidden");
-
-    // startGameScreen.classList.toggle("hidden");
     createPlayerBtn.classList.toggle("hidden");
-    // contentDiv.classList.toggle("hidden");
-})
-createPlayerBtn.addEventListener('click', () => {
-    createPlayerDialog.showModal();
 })
 
-const form = document.getElementById('createPlayerForm');
-const formPlayerName = document.getElementById('nameInput');
-form.addEventListener('submit', () => {
-    createPlayer(formPlayerName);
-    createPlayerDialog.close();
-    form.reset();
+const setBotForm = document.getElementById('setBotForm');
+const isComputerInput = document.getElementById('isCompInput');
+setBotForm.addEventListener('submit', () => {
+    if(isComputerInput.checked)
+        player2.setAsComputer();
+    
+    setBotDialog.close();
+    setBotForm.reset();
 });
-
-const changeP1NameBtn = document.getElementById('changeNameBtn1')
-const changeP2NameBtn = document.getElementById('changeNameBtn2');
-const changeNameDialog = document.getElementById('changeNameDialog');
-const changeNameForm = document.getElementById('changeNameForm');
-const changeNameInput = document.getElementById('newNameInput');
-changeP1NameBtn.addEventListener('click', (event) => {
-    changeNameForm.setAttribute('data-player', '1');
-    changeNameDialog.showModal();
-})
-changeP2NameBtn.addEventListener('click', (event) => {
-    changeNameForm.setAttribute('data-player', '2');
-    changeNameDialog.showModal();
-})
-changeNameForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const changeNameInput = document.getElementById('newNameInput');
-    const pNum = e.target.getAttribute('data-player')
-    if(pNum == 1){
-        player1Name.innerHTML = "";
-        player1Name.textContent = changeNameInput.value; 
-    }
-    else if(pNum == 2){
-        player2Name.innerHTML = "";
-        player2Name.textContent = changeNameInput.value;
-    }
-    else{
-        console.log("I did nothing. No name change." + pNum);
-    }
-    changeNameDialog.close();
-    changeNameForm.reset();
-})
-
-
-
 
 export function updateCell(cell, cellContainer){
     cellContainer.classList.add("cell"); 
@@ -118,13 +81,14 @@ export function styleWinner(winner){
     restartBtn.addEventListener('click', () => window.location.reload());
     restartBtn.textContent = "Restart Game";
     winnerContainer.classList.add('winner');
-    winnerContainer.textContent = `${winner.name} Wins!`;
+    const winnerName = winner.name.toUpperCase()
+    winnerContainer.textContent = `${winnerName} Wins!`;
     contentDiv.classList.toggle("hidden");
     winnerContainer.append(restartBtn);
     document.body.append(winnerContainer);
     
 }
-export function playerInstructions(player){
+export function playerInstructions(player){    
     if(player.name === "player1"){
         if(player.placedShipCount !== 5){
             p1InfoDiv.textContent = "Place your ships!";
@@ -136,7 +100,12 @@ export function playerInstructions(player){
         }
     }
 }
-
+const orientDiv1 = document.getElementById('orientDiv1');
+const orientDiv2 = document.getElementById('orientDiv2');
+const arrows1 = document.getElementById('arrows1');
+arrows1.src = arrows;
+const arrows2 = document.getElementById('arrows2');
+arrows2.src = arrows;
 export function appendName(player, container){
     const nameContainer = document.getElementById(container);
     nameContainer.textContent = player.name;
@@ -161,6 +130,9 @@ export function removeShipIcon(player){
         if(p1ShipsContainer.children.length === 0){
             p1InfoDiv.textContent  = "All ships placed. Prepare to attack!";
             p1ShipsContainer.remove();
+            arrows1.remove();
+            orientDiv1.remove();
+            
         }
     }
     else if(player.name === "player2"){
@@ -169,6 +141,8 @@ export function removeShipIcon(player){
         if(p2ShipsContainer.children.length === 0){
             p2InfoDiv.textContent = "All ships placed. Prepare to attack!";
             p2ShipsContainer.remove();
+            arrows2.remove();
+            orientDiv2.remove();
         }
     }
     
@@ -215,6 +189,25 @@ export function renderGameboard(player, container, onCellClick, isHidden){
     });
 }
 
+const changeOrientBtn1 = document.getElementById('changeOrientBtn1');
+const changeOrientBtn2 = document.getElementById('changeOrientBtn2')
+changeOrientBtn1.addEventListener('click', () => {
+    arrows1.classList.toggle('transformArrow');
+    if(arrows1.classList.contains('transformArrow')){
+        player1.setOrientation(true);
+    }else{
+        player1.setOrientation(false);
+    }
+})
+changeOrientBtn2.addEventListener('click', () => {
+    arrows2.classList.toggle('transformArrow');
+    // active == horizontal, else == vertical
+    if(arrows2.classList.contains('transformArrow')){
+        player2.setOrientation(true);
+    }else{
+        player2.setOrientation(false);
+    }
+})
 
 
 

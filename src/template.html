@@ -13,26 +13,15 @@
     <div>
         <dialog id="formDialog">
             <div id="formContainer">
-                <form id="createPlayerForm" method="dialog">
-                    <label for="nameInput">Player Name: </label>
-                    <input id="nameInput" name="nameInput" type="text" min="1" max="15" placeholder="player 1..." required><br>
-                    <label for="isCompInput">Make Computer Play</label>
+                <form id="setBotForm" method="dialog">
+                    <label for="isCompInput">Play against the computer?<br></label>
                     <input name="isCompInput" id="isCompInput" type="checkbox"><br>
+                    <p style="color: rgb(90, 90, 90)">(Leave unchecked if you have a friend with you)</p>
                     <button name="submit" type="submit">Submit</button>
                 </form>
             </div>
         </dialog>
     </div>  
-    <dialog id="changeNameDialog">
-        <div>
-            <form id="changeNameForm" method="dialog">
-                <label for="newNameInput">New Player Name:</label>
-                <input id="newNameInput" name="newNameInput" type="text" min="1" max="15" placeholder="Chad...." required><br>
-                <button name="submit" type="submit">Submit</button>
-            </form>
-        </div>
-    </dialog>
-
     <div id="startGameScreen">
         <div id="startScreenTitle"><p id="startScreenTitle">Battleship</p></div>
         <div id="buttons">
@@ -44,18 +33,34 @@
         <div id="gameInfo"> <!-- will contain player names and display who's turn it is .-->
             <div id="namePlate" class="playerNamePlate">
                 <div class="pName">
-                    <button class="changeNameBtn" data-player="1" id="changeNameBtn1">Change Name</button>
-                    <div class="currentPlayer" data-player="1" id="player1Name"></div>
+                    <div class="currentPlayer" data-player="1" id="player1Name"></div>                
                 </div>
                 <div class="info" id="infoDiv1"></div>
+                <div>
+                    <div id="orientDiv1" class="placementInfo">
+                        <img id="arrows1" src="#">
+                        <div class="orientInfo">
+                            <label>Change Placement Orientation</label>
+                            <input data-player-no="1" class="orientBtn" id="changeOrientBtn1" type="checkbox"></input>
+                        </div>
+                    </div>
+                </div>
                 <div class="availableShips hidden" id="availableShips1" ></div>
             </div>
             <div class="playerNamePlate">
                 <div class="pName">
-                    <button class="changeNameBtn" data-player="2" id="changeNameBtn2">Change Name</button>
                     <div class="currentPlayer" data-player="2" id="player2Name"></div>
                 </div>
                 <div class="info" id="infoDiv2"></div>
+                <div>
+                    <div  id="orientDiv2" class="placementInfo">
+                        <img id="arrows2" src="#">
+                        <div class="orientInfo">
+                            <label>Change Placement Orientation</label>
+                            <input data-player-no="2" class="orientBtn" id="changeOrientBtn2" type="checkbox"></input>
+                        </div>
+                    </div>
+                </div>
                 <div class="availableShips hidden" id="availableShips2"></div>
             </div>
         </div>
