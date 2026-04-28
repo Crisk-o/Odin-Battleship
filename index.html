@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odin: Battleship</title>
+<script defer src="main.js"></script></head>
+<body>
+    <div class="hidden" id="titleDiv">Battleship</div>
+    <div>
+        <dialog id="formDialog">
+            <div id="formContainer">
+                <form id="setBotForm" method="dialog">
+                    <label for="isCompInput">Play against the computer?<br></label>
+                    <input name="isCompInput" id="isCompInput" type="checkbox"><br>
+                    <p style="color: rgb(90, 90, 90)">(Leave unchecked if you have a friend with you)</p>
+                    <button name="submit" type="submit">Submit</button>
+                </form>
+            </div>
+        </dialog>
+    </div>  
+    <div id="startGameScreen">
+        <div id="startScreenTitle"><p id="startScreenTitle">Battleship</p></div>
+        <div id="buttons">
+            <button id="startGameBtn" class="bounce-button">Start Game</button>
+            <button class="hidden" id="createPlayerBtn">Create Player</button>
+        </div>
+    </div>
+    <div id="content"> 
+        <div id="gameInfo"> <!-- will contain player names and display who's turn it is .-->
+            <div id="namePlate" class="playerNamePlate">
+                <div class="pName">
+                    <div class="currentPlayer" data-player="1" id="player1Name"></div>                
+                </div>
+                <div class="info" id="infoDiv1"></div>
+                <div>
+                    <div id="orientDiv1" class="placementInfo">
+                        <img id="arrows1" src="#">
+                        <div class="orientInfo">
+                            <label>Change Placement Orientation</label>
+                            <input data-player-no="1" class="orientBtn" id="changeOrientBtn1" type="checkbox"></input>
+                        </div>
+                    </div>
+                </div>
+                <div class="availableShips hidden" id="availableShips1" ></div>
+            </div>
+            <div class="playerNamePlate">
+                <div class="pName">
+                    <div class="currentPlayer" data-player="2" id="player2Name"></div>
+                </div>
+                <div class="info" id="infoDiv2"></div>
+                <div>
+                    <div  id="orientDiv2" class="placementInfo">
+                        <img id="arrows2" src="#">
+                        <div class="orientInfo">
+                            <label>Change Placement Orientation</label>
+                            <input data-player-no="2" class="orientBtn" id="changeOrientBtn2" type="checkbox"></input>
+                        </div>
+                    </div>
+                </div>
+                <div class="availableShips hidden" id="availableShips2"></div>
+            </div>
+        </div>
+        <div id="gameboardsContainer">
+            <div id="player1Div">
+                <div id="player1Board"></div>
+            </div>
+            <div id="player2Div">
+                <div id="player2Board"></div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
