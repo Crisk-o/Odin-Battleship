@@ -210,4 +210,28 @@ changeOrientBtn2.addEventListener('click', () => {
 })
 
 
+export function switchPlayerScreen(){
+        const promise = new Promise(resolve => {
+        contentDiv.classList.toggle('applyBlur');
+        const screenDialog = document.createElement('dialog');
+        screenDialog.classList.add('switchScreen');
+        // screenDialog.classList.toggle('hidden');
+        const screenDiv = document.createElement('div');
+        const confirmBtn = document.createElement('button');
+        confirmBtn.textContent = "Confirm Player Switch";
+        const screenText = document.createElement('p');
+        screenText.textContent = "Turn taken. Give the controls to the other player to continue!"
+        screenDiv.append(screenText, confirmBtn);
+        screenDialog.append(screenDiv);
+        document.body.append(screenDialog);
+        screenDialog.show();
+        confirmBtn.addEventListener('click', () => {
+            screenDialog.close();
+            screenDiv.remove();
+            contentDiv.classList.toggle('applyBlur');
+            resolve();
+        })
+    });
+}
+
 

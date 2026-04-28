@@ -1,5 +1,5 @@
 import { Player } from "./player.js";
-import { renderGameboard, updateCell, appendName, removeShipIcon, styleCurrentPlayer, styleWinner} from "./ui.js";
+import { renderGameboard, updateCell, appendName, removeShipIcon, styleCurrentPlayer, styleWinner, switchPlayerScreen} from "./ui.js";
 import "./styles.css";
 // ships are [Carrier(5), Battleship(4), Destroyer(3), Submarine(3), Patrol Boat(2)]
 
@@ -17,8 +17,6 @@ function getOrientation(player){
 }
 function handlePlacement(player, row, col){
     const fleet = player.availableShips;
-    /* SWITCH THIS W/ A ROTATE BUTTON LATER */
-
     const isHorizontal = getOrientation(player);
     if(shipIndex < fleet.length){
         const currentShip = fleet[shipIndex];
@@ -62,7 +60,7 @@ function randomShipPlacements(){
         }
     } 
 }
-// for use CPU attack phase.
+// for CPU attack phase.
 let missedShots = [];
 async function computerAttack(){
     let shotLaunched = false;
@@ -88,7 +86,9 @@ async function computerAttack(){
     }
 }
 
-function switchPlayer(){
+async function switchPlayer(){
+    if(player2.isComputer === false){
+    }
     if(currentPlayer == player1){
         currentPlayer = player2
         waitingPlayer = player1;
@@ -97,9 +97,10 @@ function switchPlayer(){
         currentPlayer = player1;
         waitingPlayer = player2;
     }
-    console.log("currentPlayer (after switch): " + currentPlayer.name); // remove later.
-
+    if(player1.isComputer === false && player2.isComputer === false)
+        await switchPlayerScreen();
     styleCurrentPlayer(currentPlayer);
+
 }
 
 async function waitHalfSecond(){
@@ -120,7 +121,6 @@ function handleAttack(player, row, col){
         if(player2.isComputer === true){
             computerAttack();
         }else{
-            // renderGameboard(player1.gameboard, "player1Board", (r,c) => handleAttack(player2,r,c));
             const result = player2.attackShip(player1.gameboard, row,col);
             if(result !== "Already attacked here")
                 renderGameboard(player1.gameboard, "player1Board", (r,c) => handleAttack(player2,r,c));
@@ -136,7 +136,6 @@ async function startAttackPhase(){
         const defender = isP1 ? player2 : player1;
         const attackerBoard = isP1 ? "player1Board" : "player2Board";
         const defenderBoard = isP1 ? "player2Board" : "player1Board";
-
         if(attacker.name === player2.name && attacker.isComputer === true){
             renderGameboard(attacker.gameboard, attackerBoard,"", true);
             computerAttack();
@@ -150,7 +149,6 @@ async function startAttackPhase(){
                 }, true);
             });
         }
-        console.log("Finished turn. Switching player....");
 }
 
 function initializeUI(){
@@ -179,7 +177,6 @@ function waitForPlacement(player){
         const check = () => {
             // if condition is met, resolve promise.
             if(player.placedShipCount === maxShipCount){
-                console.log("ALL SHIPS PLACED. RESOLVING PROMISE");
                 resolve();
             }
             // condition not met, wait 0.1sec and try again.
@@ -200,8 +197,6 @@ function checkForWin(){
 function declareWinner(winner){
     styleWinner(winner);
 }
-
-
 
 async function GameManager(){
     let winner = null;
